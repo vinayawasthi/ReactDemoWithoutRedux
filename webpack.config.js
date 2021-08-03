@@ -3,12 +3,13 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const PORT = process.env.PORT || 3000;
+const MODE = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 const BUILD_DIR = path.join(__dirname, 'dist');
 const APP_DIR = path.join(__dirname, 'src');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 module.exports = {
-    mode: 'development',
+    mode: MODE,
     entry: APP_DIR + '/index.js',
     output: {
         path: BUILD_DIR,
@@ -26,8 +27,7 @@ module.exports = {
             {
                 test: /\.(js)$/,
                 use: ['babel-loader'],
-                include: APP_DIR,
-                exclude: /(node_modules|bower_components)/
+                exclude: /(node_modules)/
             },
             {
                 test: /\.s[ac]ss|css$/i,
@@ -36,13 +36,7 @@ module.exports = {
                     loader: 'style-loader'
                 }, {
                     // translates CSS into CommonJS modules
-                    loader: 'css-loader',
-                    options: {
-                        sourceMap: true,
-                        modules: {
-                            localIdentName: '[name]_[local]_[hash:base64:6]'
-                        }
-                    }
+                    loader: 'css-loader'
                 }, {
                     // Run postcss actions
                     loader: 'postcss-loader',
@@ -75,12 +69,13 @@ module.exports = {
         })
     ],
     devServer: {
-        contentBase: PUBLIC_DIR,
+        contentBase: BUILD_DIR,
         host: 'localhost',
         port: PORT,
         historyApiFallback: true,
         open: true,
         hot: true,
         liveReload: true,
+        headers: {'Access-Control-Allow-Origin': '*'}
     }
 };
