@@ -30,22 +30,38 @@ module.exports = {
                 exclude: /(node_modules|bower_components)/
             },
             {
-                test: /\.css$/,
-                use: [
-                    {
-                        loader: 'style-loader'
-                    },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            sourceMap: true,
-                            modules: {
-                                localIdentName: '[name]_[local]_[hash:base64:6]'
+                test: /\.s[ac]ss|css$/i,
+                use: [{
+                    // inject CSS to page
+                    loader: 'style-loader'
+                }, {
+                    // translates CSS into CommonJS modules
+                    loader: 'css-loader',
+                    options: {
+                        sourceMap: true,
+                        modules: {
+                            localIdentName: '[name]_[local]_[hash:base64:6]'
+                        }
+                    }
+                }, {
+                    // Run postcss actions
+                    loader: 'postcss-loader',
+                    options: {
+                        // `postcssOptions` is needed for postcss 8.x;
+                        // if you use postcss 7.x skip the key
+                        postcssOptions: {
+                            // postcss plugins, can be exported to postcss.config.js
+                            plugins: function () {
+                                return [
+                                    require('autoprefixer')
+                                ];
                             }
                         }
-                    },
-                ],
-                include: APP_DIR,
+                    }
+                }, {
+                    // compiles Sass to CSS
+                    loader: 'sass-loader'
+                }]
             }
         ]
     },
