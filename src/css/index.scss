@@ -10,3 +10,11 @@ $theme-colors: (
 body {
     background-color: $body-bgcolor;
 }
+
+#footer {
+    background-color: #fff;
+    padding: 20px 0px;
+}
+#footer p {
+    margin: 0px;
+}
